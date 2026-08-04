@@ -1,0 +1,20 @@
+{
+  "medical_svs_sft": {
+    "file_name": "sft.jsonl",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "system": "system",
+      "tools": "tools",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  }
+}
+

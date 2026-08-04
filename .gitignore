@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+data/processed/
+outputs/
+checkpoints/
+wandb/
+*.svs
+*.tif
+*.tiff
+
