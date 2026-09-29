@@ -43,6 +43,41 @@ def load_manifest(path: str | Path) -> dict[str, Path]:
     return result
 
 
+def read_slide_overview(
+    slide_path: str | Path,
+    *,
+    level: int = 4,
+    opener: Callable[[str], Any] | None = None,
+) -> tuple[dict[str, Any], Image.Image]:
+    """Read the entire slide at a fixed pyramid level."""
+    path = Path(slide_path).expanduser().resolve()
+    if not path.is_file():
+        raise SlideError(f"slide does not exist: {path}")
+    if opener is None:
+        import openslide
+
+        opener = openslide.OpenSlide
+    slide = opener(str(path))
+    try:
+        level_count = int(slide.level_count)
+        if level < 0 or level >= level_count:
+            raise SlideError(f"overview level must be between 0 and {level_count - 1}")
+        slide_dimensions = list(map(int, slide.dimensions))
+        level_dimensions = list(map(int, slide.level_dimensions[level]))
+        downsample = float(slide.level_downsamples[level])
+        image = slide.read_region((0, 0), level, tuple(level_dimensions)).convert("RGB")
+        return {
+            "level": level,
+            "level_downsample": downsample,
+            "level_dimensions": level_dimensions,
+            "slide_dimensions": slide_dimensions,
+        }, image
+    finally:
+        close = getattr(slide, "close", None)
+        if close is not None:
+            close()
+
+
 class OpenSlideCropService:
     def __init__(
         self,
@@ -120,4 +155,3 @@ class OpenSlideCropService:
             close = getattr(slide, "close", None)
             if close is not None:
                 close()
-

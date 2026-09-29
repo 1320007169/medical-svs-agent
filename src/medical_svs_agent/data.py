@@ -9,15 +9,19 @@ from typing import Any, Iterable
 
 from PIL import Image
 
-from .schema import TOOL_NAME, tool_schema
+from .schema import RETURN_TOOL_NAME, TOOL_NAME, tool_schemas
 
 
 TOOL_CALL_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
 SYSTEM_PROMPT = (
     "You are a medical whole-slide image assistant. Start from the low-resolution "
     "overview. Use openslide_crop whenever cellular or tissue detail is needed. "
-    "OpenSlide level 0 is the highest resolution. Base the final response only on "
-    "visible evidence and place it inside <answer>...</answer>."
+    "If a zoom branch is uninformative, use return_level to revisit the most recent "
+    "previously observed view at the requested coarser level, then select a new region. "
+    "OpenSlide level 0 is the highest resolution. Before each tool call, briefly "
+    "state the visible evidence motivating the next crop inside <think>...</think>. "
+    "Before the final answer, summarize the visible evidence inside "
+    "<think>...</think>, then place the diagnosis inside <answer>...</answer>."
 )
 
 
@@ -67,8 +71,8 @@ def validate_messages(messages: list[dict[str, Any]]) -> None:
     for message in messages:
         for fragment in TOOL_CALL_RE.findall(str(message.get("content") or "")):
             call = json.loads(fragment.strip())
-            if call.get("name") != TOOL_NAME:
-                raise ValueError(f"only {TOOL_NAME} is allowed, got {call.get('name')}")
+            if call.get("name") not in {TOOL_NAME, RETURN_TOOL_NAME}:
+                raise ValueError(f"unsupported tool: {call.get('name')}")
             if not isinstance(call.get("arguments"), dict):
                 raise ValueError("tool arguments must be an object")
             calls += 1
@@ -104,7 +108,7 @@ def build_sft(
                 "system": system,
                 "messages": messages,
                 "images": [str(overview)],
-                "tools": [tool_schema()],
+                "tools": tool_schemas(),
             }
             handle.write(json.dumps(converted, ensure_ascii=False) + "\n")
             manifest[slide_id] = str(Path(str(row["slide_path"])).expanduser().resolve())

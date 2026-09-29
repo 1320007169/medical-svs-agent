@@ -13,7 +13,7 @@ freeze_language_model: false
 deepspeed: configs/zero3.json
 
 ### dataset
-dataset_dir: data_pipeline/step2_llamafactory
+dataset_dir: data_pipeline/step2_llamafactory_cot
 dataset: medical_svs_sft
 template: qwen3_vl_nothink
 cutoff_len: 16384
@@ -21,7 +21,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: outputs/sft/qwen3_vl_8b_medical
+output_dir: outputs/sft/qwen3_vl_8b_medical_cot
 logging_steps: 10
 save_steps: 200
 save_total_limit: 3

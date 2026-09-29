@@ -19,11 +19,19 @@ def trajectory():
     ]
 
 
-def test_only_openslide_tool_is_accepted():
+def test_unknown_tool_is_rejected():
     messages = trajectory()
     messages[1]["content"] = '<tool_call>{"name":"search","arguments":{}}</tool_call>'
-    with pytest.raises(ValueError, match="only openslide_crop"):
+    with pytest.raises(ValueError, match="unsupported tool"):
         validate_messages(messages)
+
+
+def test_return_level_tool_is_accepted():
+    messages = trajectory()
+    messages[1]["content"] = (
+        '<tool_call>{"name":"return_level","arguments":{"level":4}}</tool_call>'
+    )
+    validate_messages(messages)
 
 
 def test_build_sft_uses_overview_and_writes_registry(tmp_path: Path):
@@ -49,7 +57,7 @@ def test_build_sft_uses_overview_and_writes_registry(tmp_path: Path):
     row = json.loads(output.read_text())
     manifest = json.loads(Path(summary["slide_manifest"]).read_text())
     assert row["tools"][0]["function"]["name"] == "openslide_crop"
+    assert row["tools"][1]["function"]["name"] == "return_level"
     assert row["messages"][0]["content"].startswith("<image>")
     assert manifest["slides"]["case"] == str(slide.resolve())
     assert (output.parent / "dataset_info.json").is_file()
-

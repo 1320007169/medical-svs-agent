@@ -1,4 +1,4 @@
-"""Canonical schema for the project's only model-visible tool."""
+"""Canonical schemas for the model-visible whole-slide tools."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import Any
 
 
 TOOL_NAME = "openslide_crop"
+RETURN_TOOL_NAME = "return_level"
 TOOL_SCHEMA: dict[str, Any] = {
     "type": "function",
     "function": {
@@ -37,7 +38,41 @@ TOOL_SCHEMA: dict[str, Any] = {
     },
 }
 
+RETURN_TOOL_SCHEMA: dict[str, Any] = {
+    "type": "function",
+    "function": {
+        "name": RETURN_TOOL_NAME,
+        "description": (
+            "Return to the most recently observed view at a previous, coarser "
+            "pyramid level. Use this after a zoom branch is uninformative and a "
+            "different region should be selected from an earlier view."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Previously observed pyramid level to return to.",
+                }
+            },
+            "required": ["level"],
+        },
+    },
+}
+
 
 def tool_schema() -> dict[str, Any]:
     return deepcopy(TOOL_SCHEMA)
 
+
+def return_tool_schema() -> dict[str, Any]:
+    return deepcopy(RETURN_TOOL_SCHEMA)
+
+
+def tool_schemas() -> list[dict[str, Any]]:
+    return [tool_schema(), return_tool_schema()]
+
+
+def function_tool_schemas() -> list[dict[str, Any]]:
+    return [schema["function"] for schema in tool_schemas()]

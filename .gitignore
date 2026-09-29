@@ -3,10 +3,13 @@ __pycache__/
 .pytest_cache/
 .venv/
 data/processed/
+data/converted_sft/
+data_pipeline/
+wsi-cot-811-positive-complete-20260804/
+logs/
 outputs/
 checkpoints/
 wandb/
 *.svs
 *.tif
 *.tiff
-
