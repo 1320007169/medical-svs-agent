@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
+/start_codex.sh
 data/processed/
 data/converted_sft/
 data_pipeline/
