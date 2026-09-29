@@ -78,7 +78,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "outputs/inference/sample_results.jsonl",
+        default=ROOT / "wsi-cot-811-positive-complete-20260804/reports/inference_reports/sample_results.jsonl",
     )
     args = parser.parse_args()
 

@@ -54,6 +54,20 @@ environment.
 
 ## Source data
 
+The Hugging Face dataset `albert13200/wsi-cot-811-positive-complete-20260804`
+and its local download use this layout:
+
+```text
+wsi-cot-811-positive-complete-20260804/
+  reports/          # Inference reports and their image assets
+  svs/              # Available original whole-slide files
+  sft_trajectories/  # Source trajectories, manifests, patches, and archives
+```
+
+Processed LLaMA-Factory training corpora are generated separately under
+`data_pipeline/`. The dataset directory and generated corpora are excluded
+from this Git repository.
+
 Use absolute paths in production. An SFT JSONL row contains a demonstrated
 multi-turn trajectory:
 
@@ -169,4 +183,3 @@ bash -n scripts/*.sh
 
 Unit tests use a fake slide reader, so they do not require real patient data,
 GPU access, or an SVS fixture.
-

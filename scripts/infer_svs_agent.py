@@ -65,7 +65,10 @@ def main() -> None:
     parser.add_argument("--slide", type=Path, required=True)
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs/inference/online_trajectories")
+    parser.add_argument(
+        "--output-dir", type=Path,
+        default=ROOT / "wsi-cot-811-positive-complete-20260804/reports/inference_reports/online_trajectories",
+    )
     parser.add_argument("--max-turns", type=int, default=6)
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--max-crop-side", type=int, default=2048)

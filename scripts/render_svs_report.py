@@ -17,9 +17,10 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TRAJECTORIES = ROOT / "outputs/inference/online_trajectories"
-DEFAULT_REFERENCE = ROOT / "wsi-cot-811-positive-complete-20260804/trajectories"
-DEFAULT_OUTPUT = ROOT / "outputs/inference/svs_report/index.html"
+DATA_ROOT = ROOT / "wsi-cot-811-positive-complete-20260804"
+DEFAULT_TRAJECTORIES = DATA_ROOT / "reports/inference_reports/online_trajectories"
+DEFAULT_REFERENCE = DATA_ROOT / "sft_trajectories/trajectories"
+DEFAULT_OUTPUT = DATA_ROOT / "reports/inference_reports/svs_report/index.html"
 LEGACY_IMAGE_MAX_PIXELS = 262144
 EMBED_IMAGE_MAX_EDGE = 1600
 EMBED_IMAGE_QUALITY = 78
